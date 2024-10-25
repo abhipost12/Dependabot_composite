@@ -1,0 +1,34 @@
+name: "Check and Add Dependabot"
+description: "Checks for the existence of dependabot.yml and adds it if not present"
+inputs:
+  repo-dependabot-yml:
+    description: "The path to the dependabot.yml in the source repository."
+    required: true
+    default: "https://raw.githubusercontent.com/abhipost12/Dependabot_composite/main/.github/actions/check-dependabot/dependabot.yml" # Change to your raw URL
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Check for dependabot.yml
+      id: check_dependabot
+      run: |
+        if [ ! -f .github/dependabot.yml ]; then
+          echo "dependabot.yml not found. Adding it from the specified repository."
+          curl -o .github/dependabot.yml ${{ inputs.repo-dependabot-yml }}
+          echo "true" >> $GITHUB_ENV
+        else
+          echo "dependabot.yml already exists."
+          echo "false" >> $GITHUB_ENV
+        fi
+
+    - name: Commit and push changes
+      if: env.GITHUB_ENV == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .github/dependabot.yml
+        git commit -m "Add dependabot.yml"
+        git push
