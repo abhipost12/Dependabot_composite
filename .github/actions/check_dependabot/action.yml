@@ -4,7 +4,7 @@ inputs:
   repo-dependabot-yml:
     description: "The path to the dependabot.yml in the source repository."
     required: true
-    default: "https://raw.githubusercontent.com/abhipost12/Dependabot_composite/main/.github/actions/check-dependabot/dependabot.yml" # Change to your raw URL
+    default: "https://raw.githubusercontent.com/abhipost12/Dependabot_composite/main/.github/actions/check_dependabot/dependabot.yml" # Change to your raw URL
 
 runs:
   using: "composite"
